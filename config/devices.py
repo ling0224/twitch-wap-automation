@@ -4,7 +4,6 @@ _IOS_USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleW
 
 @dataclass(frozen=True)
 class DeviceProfile:
-	
     """ profile for each device, used for emulation """
     name: str
     width: int = 393
@@ -13,7 +12,7 @@ class DeviceProfile:
     platform: str = "Android"
     user_agent: str | None = None  # set only when the user_agent cannot be inferred (for iOS devices)
 
-    def as_dict(self) -> dict:
+    def as_cdp_payload(self) -> dict:
         """ return a dict representation of the device profile for use in Selenium mobile emulation 
         -> selenium.webdriver.chrome.options.Options.add_experimental_option("mobileEmulation", device_profile.as_dict())
         -> clientHints.platform NOT support iOS, so we need to set the userAgent for iOS devices, otherwise it will return invalid argument error
