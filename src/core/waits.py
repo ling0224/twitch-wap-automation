@@ -43,3 +43,10 @@ def layout_settled(driver: WebDriver) -> bool:
 def viewport_width(driver: WebDriver) -> int:
     """Layout viewport width in CSS px; unlike ``innerWidth`` it ignores content overflow."""
     return driver.execute_script("return document.documentElement.clientWidth")
+
+def in_viewport(driver: WebDriver, element) -> bool:
+    """``element`` is fully inside the viewport, i.e. what a user can actually tap."""
+    return driver.execute_script(
+        "const r = arguments[0].getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight",
+        element,
+    )

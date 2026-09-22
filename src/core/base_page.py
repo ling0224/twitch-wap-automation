@@ -82,7 +82,7 @@ class BasePage:
         return self.driver.find_elements(*locator)
 
     @retry_on_transient()
-    def click(self, locator: Locator) -> None:
+    def wait_and_click(self, locator: Locator) -> None:
         element = self.wait(EC.element_to_be_clickable(locator), f"not clickable: {locator}")
         self.scroll_into_view(element)
         element.click()
@@ -125,6 +125,7 @@ class BasePage:
         reached; the browser clamps each attempt to the current page height.
         """
         target = self.scroll_position() + self.viewport_height()
+        print(f"scrolling one viewport down to y={target}, current y={self.scroll_position()} + viewport height {self.viewport_height()}")
 
         def reached(_) -> bool:
             self.driver.execute_script("window.scrollTo(0, arguments[0]);", target)
