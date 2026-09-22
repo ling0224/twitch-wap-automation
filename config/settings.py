@@ -28,18 +28,18 @@ def _env_int(key: str, default: int) -> int:
 @dataclass
 class Settings:
     """Configuration settings for the test run."""
-    debug: bool = False
-    environment: str = "staging"
-    log_level: str = "INFO"
 
     base_url: str = field(default_factory=lambda: os.getenv("BASE_URL", "https://m.twitch.tv/"))
-    browser: str = field(default_factory=lambda: os.getenv("BROWSER", "chrome"))
     device_name: str = field(default_factory=lambda: os.getenv("DEVICE", DEFAULT_DEVICE))
     headless: bool = field(default_factory=lambda: _env_bool("HEADLESS", False))
 
     # Timeouts (seconds)
-    default_timeout: int = field(default_factory=lambda: _env_int("TIMEOUT", 30))
-    page_load_timeout: int = field(default_factory=lambda: _env_int("PAGE_LOAD_TIMEOUT", 30))
+    default_timeout: int = field(default_factory=lambda: _env_int("TIMEOUT", 10))
+    page_load_timeout: int = field(default_factory=lambda: _env_int("PAGE_LOAD_TIMEOUT", 10))
+
+    screenshots_dir: Path = field(
+        default_factory=lambda: Path(os.getenv("SCREENSHOTS_DIR", BASE_DIR / "reports" / "screenshots"))
+    )
 
     @property
     def device(self) -> DeviceProfile:

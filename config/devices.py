@@ -32,8 +32,9 @@ class DeviceProfile:
 
 
 DEVICES: dict[str, DeviceProfile] = {
-    "Pixel_8": DeviceProfile("pixel_8", 393, 851, 2.75),
-    "iPhone_X": DeviceProfile("iphone_X", 390, 844, 3.0, platform="iOS", user_agent=_IOS_USER_AGENT),
+    "Pixel_8": DeviceProfile("pixel_8", 412, 915, 2.75),
+    "iPhone_X": DeviceProfile("iphone_X", 375, 812, 3.0, platform="iOS", user_agent=_IOS_USER_AGENT),
+    "iPhone_12": DeviceProfile("iphone_12", 390, 844, 3.0, platform="iOS", user_agent=_IOS_USER_AGENT),
 }
 
 DEFAULT_DEVICE = "Pixel_8"
