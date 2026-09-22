@@ -126,7 +126,7 @@ Pop-ups are data, not code: each one is a `Popup(name, container, dismiss)` entr
 
 ### Locators
 
-Priority: `data-a-target` > `aria-label` / `role` > structure. Twitch's CSS class names are hashed and never used. The UI language is pinned to `en-US` so text and `aria-label` locators are stable.
+Priority: `data-a-target` > `aria-label` / `role` > structure. Hashed CSS class names are never used. The UI language is pinned to `en-US` so text and `aria-label` locators are stable.
 
 ## Known limitations
 
