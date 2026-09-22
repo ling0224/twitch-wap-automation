@@ -8,6 +8,7 @@ injected through the ``PopupDismisser`` protocol, which
 
 from __future__ import annotations
 
+import logging
 from typing import Protocol, Self, TypeVar
 from urllib.parse import urljoin, urlparse
 
@@ -18,6 +19,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from config.settings import Settings
 from src.core.retry import retry_on_transient
 from src.core.waits import Condition, document_complete, layout_settled, viewport_width, wait_for
+
+log = logging.getLogger(__name__)
 
 Locator = tuple[str, str]
 T = TypeVar("T")
@@ -61,7 +64,6 @@ class BasePage:
         self.wait(layout_settled, "page kept overflowing the viewport horizontally")
         if self.popups is not None:
             self.popups.dismiss_all()
-            print("dismissed pop-ups, waiting for layout to settle again")
         if self.ready_locator is not None:
             print(f"waiting for ready_locator {self.ready_locator} to be visible")
             self.visible(self.ready_locator)
@@ -92,6 +94,15 @@ class BasePage:
         """Click an element already in hand, e.g. one card out of ``find_all``."""
         self.scroll_into_view(element)
         element.click()
+
+    def js_click(self, locator: Locator) -> None:
+        """Dispatch a click to the element itself, bypassing whatever covers its centre.
+
+        Only for full-size layers whose centre is always covered by another
+        control (e.g. a player's tap layer under the pause button); anything
+        with its own visible control should use ``wait_and_click``.
+        """
+        self.driver.execute_script("arguments[0].click();", self.find(locator))
 
     @retry_on_transient()
     def type_text(self, locator: Locator, text: str, clear: bool = True) -> None:
@@ -125,7 +136,7 @@ class BasePage:
         reached; the browser clamps each attempt to the current page height.
         """
         target = self.scroll_position() + self.viewport_height()
-        print(f"scrolling one viewport down to y={target}, current y={self.scroll_position()} + viewport height {self.viewport_height()}")
+        log.info("Scrolling one viewport down to y=%s", target)
 
         def reached(_) -> bool:
             self.driver.execute_script("window.scrollTo(0, arguments[0]);", target)
@@ -137,7 +148,7 @@ class BasePage:
 
     def assert_wap_layout(self) -> None:
         """Fail fast if we got the desktop site instead of the emulated mobile one."""
-        print(f"asserting WAP layout for {self.settings.device_name} at {self.settings.base_url}")
+        log.info("Asserting WAP layout for %s at %s", self.settings.device_name, self.driver.current_url)
         expected_host = urlparse(self.settings.base_url).netloc
         actual_host = urlparse(self.driver.current_url).netloc
         assert actual_host == expected_host, f"expected host {expected_host}, got {actual_host}"

@@ -13,8 +13,7 @@ from src.pages.twitch_page import TwitchPage
 
 
 class SearchResultsPage(TwitchPage):
-    """``/directory/category/") and normalize-space()="{term}"``: live streams of one game, reached from a search suggestion."""
-
+   
     LINK_CARD = (By.XPATH, '//button[contains(@class, "tw-link")]')
     ready_locator = LINK_CARD
 
