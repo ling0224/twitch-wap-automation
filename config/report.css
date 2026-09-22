@@ -1,0 +1,11 @@
+/* pytest-html overrides, loaded via `--css` in pytest.ini.
+ *
+ * The media preview is a ~320x200 landscape box with `object-fit: cover`,
+ * which crops a portrait phone screenshot (1081x2340) to its middle strip,
+ * the empty dark area between player and chat, so it looks all black.
+ * `contain` shows the whole screenshot, scaled down.
+ */
+.media-container__viewport img {
+  object-fit: contain;
+  height: 100%;
+}
