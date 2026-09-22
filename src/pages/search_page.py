@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 from src.core.base_page import Locator
 
 from src.pages.search_results_page import SearchResultsPage
-from src.pages.category_page import CategoryPage
 from src.pages.twitch_page import TwitchPage
 
 class SearchPage(TwitchPage):

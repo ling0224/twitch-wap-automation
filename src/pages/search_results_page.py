@@ -8,6 +8,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from src.core.retry import retry_on_transient
 from src.core.waits import in_viewport
+from src.pages.streamer_page import StreamerPage
 from src.pages.twitch_page import TwitchPage
 
 
@@ -30,6 +31,11 @@ class SearchResultsPage(TwitchPage):
         self.scroll_one_viewport()
         self.wait(lambda _: self._cards_on_screen(), "no channel card rendered after scrolling")
         return self.scroll_times(times - 1)
+
+    def select_streamer(self, index: int = 0) -> StreamerPage:
+        """Open the ``index``-th channel card that is fully on screen."""
+        self._click_card(index)
+        return self.go_to(StreamerPage)
 
     @retry_on_transient()
     def _click_card(self, index: int) -> None:

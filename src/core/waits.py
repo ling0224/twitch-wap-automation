@@ -50,3 +50,24 @@ def in_viewport(driver: WebDriver, element) -> bool:
         "const r = arguments[0].getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight",
         element,
     )
+
+
+def video_ready(driver: WebDriver) -> bool:
+    """First ``<video>`` has a decoded frame to show (readyState >= HAVE_CURRENT_DATA)."""
+    return driver.execute_script("const v = document.querySelector('video'); return !!v && v.readyState >= 2")
+
+
+def viewport_images_loaded(driver: WebDriver) -> bool:
+    """Every image intersecting the viewport has finished decoding.
+
+    Off-screen images are skipped: lazy-loaded ones never load until scrolled to.
+    """
+    return driver.execute_script(
+        """
+        return [...document.images].every(img => {
+          const r = img.getBoundingClientRect();
+          const onScreen = r.width > 0 && r.bottom > 0 && r.top < innerHeight;
+          return !onScreen || (img.complete && img.naturalWidth > 0);
+        });
+        """
+    )
