@@ -83,7 +83,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo):
     report = yield
     funcargs = getattr(item, "funcargs", {})
     driver = funcargs.get("driver")
-    if report.when == "call" and report.failed and driver is not None:
+    if report.when in ("setup", "call") and report.failed and driver is not None:
         png = driver.get_screenshot_as_png()
         failures_dir = funcargs["settings"].screenshots_dir / "failures"  # driver depends on settings
         failures_dir.mkdir(parents=True, exist_ok=True)
